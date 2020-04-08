@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="chess" width="450px" height="450px"></canvas>
+    <script>
+        var chess = document.getElementById("chess");// 获取画布对象 
+        var context = chess.getContext("2d"); //设置2D画布类型
+        var me = true;
+        var curIndex = [];
+        for(var i =0; i <15; i++) {
+            curIndex[i] = [];
+            for(var j =0; j <15; j++)
+            curIndex[i][j] = 0;
+        }
+        function drawtable() {
+         //我们设置棋盘总共15根横线15根总线，左右上下都有15px的边距，其中每个棋子相距30px,因此绘制棋盘从15px开始
+            for(var i =0; i <15; i++){
+                for(var j =0; j <15; j++){
+                    //绘制横线
+                    context.moveTo(15, 15 +j *30);
+                    context.lineTo(435, 15 +j *30);
+                    // //绘制竖线
+                    context.moveTo(15 +j *30, 15);
+                    context.lineTo(15 +j *30, 435); 
+            
+                    //使用灰色描边
+                    context.strokeStyle = "#010000";
+                    //绘制已定义的路径
+                    context.stroke();
+                }
+            }
+        };
+        drawtable();
+        chess.onclick = function(event) {
+            //获取要下的棋子的位置
+            var x = Math.floor(event.offsetX /30);
+            var y = Math.floor(event.offsetY /30);
+            //画圆
+           
+            if(curIndex[x][y] == 0){
+                context.beginPath();//起始一条路径
+                context.arc(x * 30 + 15, y * 30 + 15, 12, 0, 2 * Math.PI);
+                context.stroke();
+                if (me) {
+                    context.fillStyle = "#000000";
+                    curIndex[x][y] = 1;
+                } else {
+                    context.fillStyle = "#ffffff";
+                    curIndex[x][y] = 2;
+                }
+                context.fill();
+                //结束绘制
+                context.closePath();
+                judgeWin(x,y,me);
+
+                me = !me;
+            }
+            
+
+            //判断是否赢
+            
+        }
+
+        function judgeWin(x,y,me){
+            var flag = 0;
+            if(me){
+                flag = 1;
+            }else{
+                flag = 2;
+            }
+            var is_win = false;
+            do{
+                var count1 = 1;
+                //竖线
+                for (var i = 1; i <= 5; i++) {
+                    if (curIndex[x][y + i] == flag) {
+                        count1++;
+                    } else {
+                        break;
+                    }
+                }
+                for (var i = 1; i <= 5; i++) {
+                    if (curIndex[x][y - i] == flag) {
+                        count1++;
+                    } else {
+                        break;
+                    }
+                }
+                if( count1 >= 5 ){
+                    is_win = true;
+                    break;
+                }
+
+                var count2 = 1;
+                for (var i = 1; i <= 5; i++) {
+                    if (curIndex[x + i][y] == flag) {
+                        count2++;
+                    } else {
+                        break;
+                    }
+                }
+                for (var i = 1; i <= 5; i++) {
+                    if (curIndex[x - i][y] == flag) {
+                        count2++;
+                    } else {
+                        break;
+                    }
+                }
+                if (count2 >= 5) {
+                    is_win = true;
+                    break;
+                }
+
+                
+                var count3 = 1;
+                for (var i = 1; i <= 5; i++) {
+                    if (curIndex[x + i][y + i] == flag) {
+                        count3++;
+                    } else {
+                        break;
+                    }
+                }
+                for (var i = 1; i <= 5; i++) {
+                    if (curIndex[x - i][y - i] == flag) {
+                        count3++;
+                    } else {
+                        break;
+                    }
+                }
+                if (count3 >= 5) {
+                    is_win = true;
+                    break;
+                }
+
+                var count4 = 1;
+                for (var i = 1; i <= 5; i++) {
+                    if (curIndex[x + i][y - i] == flag) {
+                        count4++;
+                    } else {
+                        break;
+                    }
+                }
+                for (var i = 1; i <= 5; i++) {
+                    if (curIndex[x - i][y + i] == flag) {
+                        count4++;
+                    } else {
+                        break;
+                    }
+                }
+                if (count4 >= 5) {
+                    is_win = true;
+                    break;
+                }
+               
+            }while(fasle);
+            
+            if (is_win) {
+                
+            }
+
+        }
+
+        function name(params) {
+            
+        }
+        
+    </script>
+</body>
+
+
+</html>
